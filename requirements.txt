@@ -1,0 +1,6 @@
+cv2
+numpy
+sys
+math
+subprocess
+playsound
