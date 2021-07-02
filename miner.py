@@ -19,7 +19,7 @@ cmd_celscreen = lib_dir + 'celscreen.py'
 cmd_tesseract = '/usr/bin/tesseract'
 
 # quantidade mínima de itens premium no artefato, descartar quem tem menos
-min_premium = 3
+min_premium = 5
 
 # tipos de artefato que você deseja farmar
 # lista dos disponiveis:
@@ -40,7 +40,7 @@ tipos_habilitados = [
 ]
 
 # armazenar artefatos 3 estrelas? True ou False
-salvar_3_estrelas = True
+salvar_3_estrelas = False
 
 # -----------------------------------------------------
 
@@ -63,71 +63,63 @@ temp_file = 'print-temp-{}.png'.format(phone_id)
 temp_text = 'items-{}'.format(phone_id)
 
 # tela inicial
-cinco_artefatos = lib_dir + 'img/5-artefatos.png'
+cinco_artefatos = lib_dir + 'img/5-artifacts.png'
 tres_estrelas = lib_dir + 'img/3-estrelas.png'
 
 # identificação de artefatos
 tipo_artefato = {
-    'equipamento-guerra-ataque': lib_dir + 'img/label-equipamento-guerra.png',
-    'equipamento-guerra-defesa': lib_dir + 'img/label-equipamento-guerra.png',
-    'blindagem-guerra-ataque': lib_dir + 'img/label-blindagem-guerra.png',
-    'blindagem-guerra-defesa': lib_dir + 'img/label-blindagem-guerra.png',
-    'arma-guerra-ataque': lib_dir + 'img/label-arma-guerra.png',
-    'arma-guerra-defesa': lib_dir + 'img/label-arma-guerra.png'
+    'equipamento-guerra-ataque': lib_dir + 'img/label-war-equip.png',
+    'equipamento-guerra-defesa': lib_dir + 'img/label-war-equip.png',
+    'blindagem-guerra-ataque': lib_dir + 'img/label-war-armor.png',
+    'blindagem-guerra-defesa': lib_dir + 'img/label-war-armor.png',
+    'arma-guerra-ataque': lib_dir + 'img/label-war-weapon.png',
+    'arma-guerra-defesa': lib_dir + 'img/label-war-weapon.png'
 }
 
 item_premium = {
     'equipamento-guerra-ataque': [
-        'Danos dos generais',
-        'Tempo de geração do defensor i',
-        'Tempo de geracao do defensor i',
-        'Tempo de geragao do defensor i',
-        'Pontos de vida de todas as torres defensivas i',
-        'Danos de todas as torres defensivas i'
+        'General\'s Damage:2',
+        'Generals\' Damage:2',
+        'Enemy Defender Spawn Time:1',
+        'All Enemy Defensive Towers Hitpoints:1',
+        'All Enemy Defensive Towers Damage:1'
     ],
     'equipamento-guerra-defesa': [
-        'Pontos de vida dos generais i',
-        'Tempo de geração do defensor',
-        'Tempo de geragao do defensor',
-        'Tempo de geracao do defensor',
-        'Pontos de vida de todas as torres defensivas',
-        'Danos de todas as torres defensivas'
+        'Pontos de vida dos generais i:1',
+        'Tempo de geração do defensor:1',
+        'Tempo de geragao do defensor:1',
+        'Tempo de geracao do defensor:1',
+        'Pontos de vida de todas as torres defensivas:1',
+        'Danos de todas as torres defensivas:1'
     ],
 
     'blindagem-guerra-ataque': [
-        'Pontos de vida dos generais',
-        'Pontos de vida do tanque pesado',
-        'Pontos de vida do caca',
-        'Pontos de vida do caga',
-        'Pontos de vida do caça',
-        'Pontos de vida do paraquedista',
-        'Pontos de vida do bombardeiro'
+        'General\'s Hitpoints:2',
+        'Heavy Tank Hitpoints:2',
+        'Fighter Hitpoints:1',
+    #    'Pontos de vida do paraquedista:1',
+    #    'Pontos de vida do bombardeiro:1'
     ],
     'blindagem-guerra-defesa': [
-        'Danos do caca i',
-        'Danos do caga i',
-        'Danos do caça i',
-        'Danos do tanque pesado i',
-        'Danos do paraquedista i',
-        'Danos do bombardeiro i'
-        'Danos dos generais i'
+        'Fighter Damage:1',
+        'Heavy Tank Damage:1',
+        'Danos do paraquedista i:1',
+        'Danos do bombardeiro i:1'
+        'Danos dos generais i:1'
     ],
 
     'arma-guerra-ataque': [
-        'Danos do caca',
-        'Danos do caga',
-        'Danos do caça',
-        'Danos do tanque pesado',
-        'Danos do paraquedista',
-        'Danos do bombardeiro'
+        'Fighter Damage:1',
+        'Heavy Tank Damage:2',
+        'Heavy Tank ee:2'
     ],
     'arma-guerra-defesa': [
-        'Pontos de vida do caca i',
-        'Pontos de vida do caga i',
-        'Pontos de vida do caça i',
-        'Pontos de vida do tanque pesado i',
-        'Pontos de vida do paraquedista i',
-        'Pontos de vida do bombardeiro i'
+        'Pontos de vida do caca i:1',
+        'Pontos de vida do caga i:1',
+        'Pontos de vida do caça i:1',
+        'Pontos de vida do tanque pesado i:1',
+        #  'Pontos de vida do paraquedista i:1',
+        #  'Pontos de vida do bombardeiro i:1'
     ]
 }
 
@@ -221,7 +213,7 @@ coordinates = {
 
 artefatos = 0
 job = 1
-while artefatos < int(quantity):
+while artefatos < int(quantity) and job <= 120:
     print('Loop {}, minerei {}...'.format(job, artefatos))
     for click in coordinates[action][phone_id]:
         x, y, tempo, tipo, x2, y2 = click.split(':')
@@ -257,34 +249,40 @@ while artefatos < int(quantity):
                     print('É {}...'.format(artefato))
                     # contabilizar itens premium 
 
-                    for item in item_premium[artefato]:
-                            #  print('verificar para {}: {}'.format(artefato, item))
-                            command = '/usr/bin/tesseract {} {} --dpi 300'.format(temp_file, temp_text)
-                            subprocess.run(command.split(), stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL)
+                    for lista_item in item_premium[artefato]:
+                        item, peso = lista_item.split(':')
+                        #  print('verificar para {}: {}'.format(artefato, item))
+                        command = '/usr/bin/tesseract {} {} --dpi 300'.format(temp_file, temp_text)
+                        subprocess.run(command.split(), stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL)
 
-                            f = open(temp_text + '.txt')
-                            for line in f:
-                                line = line.strip()
-                                if re.search('[a-zA-Z]', line, re.IGNORECASE):
-                                    if item in line:
-                                        premium_count = premium_count + 1
-                                        print('Encontrei ' + item)
+                        f = open(temp_text + '.txt')
+                        for line in f:
+                            line = line.strip()
+                            if re.search('[a-zA-Z]', line, re.IGNORECASE):
+                                #  print('Temos: ' + line)
+                                if item in line:
+                                    premium_count = premium_count + int(peso)
+                                    print('*********** Encontrei ' + item)
+                        # descomentar caso queira um tempo para depurar a tela
+                        #  time.sleep(5)
 
 
-                    print('quantidade de itens premium: {}'.format(premium_count))
+                    print('quantidade de itens premium: {}\n\n'.format(premium_count))
                     #  time.sleep(5)
 
                 if premium_count >= min_premium:
                     x = 1400
                     artefatos += 1
-                    playsound(snd_minerou)
+                    #  playsound(snd_minerou)
+                    subprocess.run(['play', snd_minerou], stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL)
                     break
 
 
         if is_estrelas:
             x = 1400
             artefatos += 1
-            subprocess.run(snd_minerou.split(), stderr=subprocess.DEVNULL)
+            #  playsound(snd_minerou)
+            subprocess.run(['play', snd_minerou], stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL)
 
         if tipo == 'tap':
             command = 'adb -s {} shell input tap {} {}'.format(phone_id, x, y).split(' ')
@@ -293,3 +291,5 @@ while artefatos < int(quantity):
         subprocess.run(command)
         time.sleep(int(tempo))
     job += 1
+
+subprocess.run(['play', snd_minerou], stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL)
