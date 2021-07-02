@@ -78,8 +78,7 @@ tipo_artefato = {
 
 item_premium = {
     'equipamento-guerra-ataque': [
-        'General\'s Damage:2',
-        'Generals\' Damage:2',
+        'Gen.*Damage:2',
         'Enemy Defender Spawn Time:1',
         'All Enemy Defensive Towers Hitpoints:1',
         'All Enemy Defensive Towers Damage:1'
@@ -94,7 +93,7 @@ item_premium = {
     ],
 
     'blindagem-guerra-ataque': [
-        'General\'s Hitpoints:2',
+        'Gen.*points:2',
         'Heavy Tank Hitpoints:2',
         'Fighter Hitpoints:1',
     #    'Pontos de vida do paraquedista:1',
@@ -110,8 +109,7 @@ item_premium = {
 
     'arma-guerra-ataque': [
         'Fighter Damage:1',
-        'Heavy Tank Damage:2',
-        'Heavy Tank ee:2'
+        'Heavy Tank.*:2'
     ],
     'arma-guerra-defesa': [
         'Pontos de vida do caca i:1',
@@ -260,7 +258,7 @@ while artefatos < int(quantity) and job <= 120:
                             line = line.strip()
                             if re.search('[a-zA-Z]', line, re.IGNORECASE):
                                 #  print('Temos: ' + line)
-                                if item in line:
+                                if re.search(item, line):
                                     premium_count = premium_count + int(peso)
                                     print('*********** Encontrei ' + item)
                         # descomentar caso queira um tempo para depurar a tela
