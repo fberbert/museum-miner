@@ -6,6 +6,7 @@ from subprocess import check_output
 import time
 import re
 from playsound import playsound
+import shutil
 
 # -----------------------------------------------------
 # CONFIGURATION SECTION
@@ -252,13 +253,13 @@ while artefatos < int(quantity) and job <= 120:
 
                     for lista_item in item_premium[artefato]:
                         item, peso = lista_item.split(':')
-                        print('verificar para {}: {}'.format(artefato, item))
+                        #  print('verificar para {}: {}'.format(artefato, item))
 
                         f = open(temp_text + '.txt')
                         for line in f:
                             line = line.strip()
                             if re.search('[a-zA-Z]', line, re.IGNORECASE):
-                                print('Temos: ' + line)
+                                #  print('Temos: ' + line)
                                 if re.search(item, line, re.IGNORECASE):
                                     premium_count = premium_count + int(peso)
                                     print('*********** Encontrei ' + item)
@@ -275,6 +276,9 @@ while artefatos < int(quantity) and job <= 120:
                     artefatos += 1
                     #  playsound(snd_minerou)
                     subprocess.run(['play', snd_minerou], stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL)
+                    # manter uma cópia do print do artefato minerado
+                    file_copy = phone_id + '_artefato_' + str(artefatos) + '.png'
+                    shutil.copyfile(temp_file, file_copy)
                     break
 
 
