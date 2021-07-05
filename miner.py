@@ -247,22 +247,24 @@ while artefatos < int(quantity) and job <= 120:
                     print('É {}...'.format(artefato))
                     # contabilizar itens premium 
 
+                    command = '/usr/bin/tesseract {} {} --dpi 300'.format(temp_file, temp_text)
+                    subprocess.run(command.split(), stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL)
+
                     for lista_item in item_premium[artefato]:
                         item, peso = lista_item.split(':')
-                        #  print('verificar para {}: {}'.format(artefato, item))
-                        command = '/usr/bin/tesseract {} {} --dpi 300'.format(temp_file, temp_text)
-                        subprocess.run(command.split(), stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL)
+                        print('verificar para {}: {}'.format(artefato, item))
 
                         f = open(temp_text + '.txt')
                         for line in f:
                             line = line.strip()
                             if re.search('[a-zA-Z]', line, re.IGNORECASE):
-                                #  print('Temos: ' + line)
-                                if re.search(item, line):
+                                print('Temos: ' + line)
+                                if re.search(item, line, re.IGNORECASE):
                                     premium_count = premium_count + int(peso)
                                     print('*********** Encontrei ' + item)
                         # descomentar caso queira um tempo para depurar a tela
                         #  time.sleep(5)
+                        f.close()
 
 
                     print('quantidade de itens premium: {}\n\n'.format(premium_count))
