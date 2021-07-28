@@ -19,9 +19,6 @@ cmd_celscreen = lib_dir + 'celscreen.py'
 # caminho do comando tesseract no sistema operacional
 cmd_tesseract = '/usr/bin/tesseract'
 
-# quantidade mínima de itens premium no artefato, descartar quem tem menos
-min_premium = 5
-
 # tipos de artefato que você deseja farmar
 # lista dos disponiveis:
 #    'equipamento-guerra-ataque',
@@ -30,14 +27,20 @@ min_premium = 5
 #    'blindagem-guerra-defesa',
 #    'arma-guerra-ataque',
 #    'arma-guerra-defesa'
+    #  'arma-multiplayer',
+    #  'blindagem-multiplayer',
+    #  'joia-multiplayer'
 #
 tipos_habilitados = [
-    'equipamento-guerra-ataque',
+    #  'equipamento-guerra-ataque',
     #  'equipamento-guerra-defesa',
-    'blindagem-guerra-ataque',
+    #  'blindagem-guerra-ataque',
     #  'blindagem-guerra-defesa',
-    'arma-guerra-ataque',
+    #  'arma-guerra-ataque',
     #  'arma-guerra-defesa'
+    #  'arma-multiplayer',
+    #  'blindagem-multiplayer',
+    'joia-multiplayer'
 ]
 
 # armazenar artefatos 3 estrelas? True ou False
@@ -45,19 +48,21 @@ salvar_3_estrelas = False
 
 # -----------------------------------------------------
 
-if len(sys.argv) != 3:
+if len(sys.argv) != 4:
     print("""
 -=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-Use: {} <id> <numero de vezes>
+Use: {} <id> <min_premium> <numero de vezes>
 
 Exemplo:
-    {} asus 10
+    {} asus 5 10
 -=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 """.format(sys.argv[0], sys.argv[0]))
     sys.exit()
 
 phone_id = sys.argv[1]
-quantity = sys.argv[2]
+# quantidade mínima de itens premium no artefato, descartar quem tem menos
+min_premium = sys.argv[2]
+quantity = sys.argv[3]
 action = 'museu'
 snd_minerou = lib_dir + 'sound/cash.wav'
 temp_file = 'print-temp-{}.png'.format(phone_id)
@@ -74,13 +79,32 @@ tipo_artefato = {
     'blindagem-guerra-ataque': lib_dir + 'img/label-war-armor.png',
     'blindagem-guerra-defesa': lib_dir + 'img/label-war-armor.png',
     'arma-guerra-ataque': lib_dir + 'img/label-war-weapon.png',
-    'arma-guerra-defesa': lib_dir + 'img/label-war-weapon.png'
+    'arma-guerra-defesa': lib_dir + 'img/label-war-weapon.png',
+    'arma-multiplayer': lib_dir + 'img/label-mp-arma.png',
+    'blindagem-multiplayer': lib_dir + 'img/label-mp-armor.png',
+    'joia-multiplayer': lib_dir + 'img/label-mp-joia.png'
 }
 
 item_premium = {
+    'arma-multiplayer': [
+        'Gen.*Damage:2',
+        'Enemy Defender*:1',
+        'All Enemy Defensive Towers Hitpoints:1',
+        'All Enemy Defensive Towers Damage:1'
+    ],
+    'blindagem-multiplayer': [
+        'Gen.*Damage:2',
+        'Enemy Defender*:1',
+        'All Enemy Defensive Towers Hitpoints:1',
+        'All Enemy Defensive Towers Damage:1'
+    ],
+    'joia-multiplayer': [
+        'Oil looted:1',
+        'All resources looted:1'
+    ],
     'equipamento-guerra-ataque': [
         'Gen.*Damage:2',
-        'Enemy Defender Spawn Time:1',
+        'Enemy Defender*:1',
         'All Enemy Defensive Towers Hitpoints:1',
         'All Enemy Defensive Towers Damage:1'
     ],
@@ -271,7 +295,7 @@ while artefatos < int(quantity) and job <= 120:
                     print('quantidade de itens premium: {}\n\n'.format(premium_count))
                     #  time.sleep(5)
 
-                if premium_count >= min_premium:
+                if int(premium_count) >= int(min_premium):
                     x = 1400
                     artefatos += 1
                     #  playsound(snd_minerou)

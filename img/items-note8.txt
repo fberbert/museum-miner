@@ -1,0 +1,18 @@
+Pselion Bracelet
+a la aC
+
+Enemy Catapult Damage -6%
+Oil Looted +6%
+
+Enemy Sas Tower Damage -11%
+
+ 
+
+All Resources Looted +1%
+
+Enemy Redoubt Hitpoints -1%
+
+ 
+
+  
+
